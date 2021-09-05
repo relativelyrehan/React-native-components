@@ -5,10 +5,12 @@ import {NavigationContainer} from '@react-navigation/native';
 import TabBar from './navigation/tabs';
 import RNBootSplash from 'react-native-bootsplash';
 import {View, StyleSheet, Platform, StatusBar} from 'react-native';
+import store from './redux/store';
+import {Provider} from 'react-redux';
 function App() {
   RNBootSplash.hide({fade: true}); // fade
   return (
-    <>
+    <Provider store={store}>
       <NavigationContainer>
         {Platform.OS === 'ios' ? (
           <View style={styles.iphonebar} />
@@ -17,7 +19,7 @@ function App() {
         )}
         <TabBar />
       </NavigationContainer>
-    </>
+    </Provider>
   );
 }
 

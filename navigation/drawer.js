@@ -11,7 +11,7 @@ import Complex from '../screens/Complex';
 
 const SideBar = () => {
   return (
-    <Drawer.Navigator initialRouteName="Simple">
+    <Drawer.Navigator initialRouteName="Lists">
       <Drawer.Screen name="Lists" component={Lists} />
       <Drawer.Screen name="Gallery" component={Gallery} />
       <Drawer.Screen name="Medium" component={Medium} />
