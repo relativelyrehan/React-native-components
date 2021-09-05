@@ -16,18 +16,36 @@ import {
 } from 'react-native';
 import Heading from '../src/components/UI/Heading';
 import Layout from '../src/components/Layout';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import ButtonPrimary, {ButtonGroup} from '../src/components/UI/Buttons';
 import close from '../src/assets/Images/close.png';
 import CentralModal from '../src/components/UI/Modal';
 import {Lines, Pie} from '../src/components/UI/Chart';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
-function Simple() {
+function Simple({navigation}) {
   const [modal, setModal] = useState();
-
+  const [pickerModal, setPickerModal] = useState();
+  const [date, setDate] = useState(new Date());
   const [inputFields, setInputFields] = useState({
     name: '',
     password: '',
   });
+
+  const setBirthday = async val => {
+    try {
+      const value = JSON.stringify(val);
+      const bd = await AsyncStorage.setItem('@birth_day', value);
+      console.log('I am hit - bd:(', bd);
+    } catch (e) {}
+  };
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setBirthday(currentDate);
+    setDate(currentDate);
+  };
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
@@ -35,7 +53,7 @@ function Simple() {
         <Layout>
           <Heading style={{fontSize: 20}}>Text heading</Heading>
           <Button
-            onPress={() => Alert.alert('Hello')}
+            onPress={() => navigation.navigate('Gallery')}
             color="red"
             title="Click me"
           />
@@ -65,10 +83,29 @@ function Simple() {
             placeholder="Enter Password"
             secureTextEntry={true}></TextInput>
 
+          <TextInput
+            multiline={true}
+            style={{...styles.inputPrimary, height: 200}}
+            placeholder="Enter Description"></TextInput>
+
           <ButtonPrimary onPress={() => setModal(!modal)}>
-            Open Modal
+            Open Form Modal
           </ButtonPrimary>
 
+          <ButtonPrimary onPress={() => setPickerModal(!pickerModal)}>
+            Open Picker Modal
+          </ButtonPrimary>
+          <Heading style={{fontSize: 20}}>Select a date</Heading>
+          <View style={{width: 300}}>
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={date}
+              mode={'date'}
+              is24Hour={true}
+              display="spinner"
+              onChange={onChange}
+            />
+          </View>
           {modal && (
             <CentralModal
               isTransparent={true}
